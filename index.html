@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Computational Biology | Clear & Human</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="An elegant, interactive exploration of DNA, Proteins, and Medical AI.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* 
+  Ultra-Premium Light Theme: Inspired by Stripe, Vercel, and Apple.
+  Focus on profound clarity, subtle shadows, perfect typography, and seamless transitions.
+*/
+:root {
+  --bg: #ffffff;
+  --bg-alt: #f8fafc;
+  --bg-subtle: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --text-light: #94a3b8;
+  --border: #e2e8f0;
+  
+  /* Primary Gradients and Accents */
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-light: #e0e7ff;
+  --gradient-text: linear-gradient(135deg, #4f46e5 0%, #0ea5e9 100%);
+  
+  /* Status Colors */
+  --safe: #10b981;
+  --safe-bg: #d1fae5;
+  --danger: #ef4444;
+  --danger-bg: #fee2e2;
+  
+  /* Shadows & Easing */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+  --shadow-lg: 0 10px 25px -5px rgb(0 0 0 / 0.05), 0 8px 10px -6px rgb(0 0 0 / 0.01);
+  --shadow-hover: 0 20px 35px -5px rgb(0 0 0 / 0.08), 0 10px 15px -5px rgb(0 0 0 / 0.03);
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  
+  /* Proteins */
+  --h-color: #f59e0b;
+  --e-color: #0ea5e9;
+  --c-color: #94a3b8;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+body {
+  margin: 0;
+  background-color: var(--bg-alt);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.w { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+
+/* Navigation */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(226, 232, 240, 0.6);
+  transition: transform 0.4s var(--ease), background 0.4s var(--ease);
+}
+nav .w { display: flex; align-items: center; gap: 12px; height: 60px; overflow-x: auto; scrollbar-width: none; }
+nav .logo { margin-right: auto; font-weight: 700; font-size: 1rem; color: var(--text-main); text-decoration: none; letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px;}
+nav .logo span { background: var(--gradient-text); -webkit-background-clip: text; color: transparent; }
+nav a.link { color: var(--text-muted); text-decoration: none; font-size: 0.875rem; font-weight: 500; padding: 6px 14px; border-radius: 99px; transition: 0.3s var(--ease); white-space: nowrap; }
+nav a.link:hover { color: var(--text-main); background: var(--bg-subtle); }
+nav a.link.on { color: var(--accent); background: var(--accent-light); }
+
+/* Hero Section */
+.hero { min-height: 90svh; display: flex; align-items: center; padding-top: 60px; background: var(--bg); position: relative; overflow: hidden; border-bottom: 1px solid var(--border); }
+.hero::before { content: ""; position: absolute; top: -50%; left: -10%; width: 60%; height: 100%; background: radial-gradient(circle, rgba(79, 70, 229, 0.05) 0%, transparent 70%); z-index: 0; }
+.hero .w { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; position: relative; z-index: 1; }
+.badge { display: inline-flex; align-items: center; font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.05em; color: var(--accent); background: var(--accent-light); padding: 4px 12px; border-radius: 99px; margin-bottom: 24px; text-transform: uppercase; }
+h1 { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.05; margin: 0 0 20px; font-weight: 700; letter-spacing: -0.04em; }
+h1 span { background: var(--gradient-text); -webkit-background-clip: text; color: transparent; }
+.lead { color: var(--text-muted); font-size: 1.125rem; max-width: 540px; margin-bottom: 32px; font-weight: 400; }
+
+.btns { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 48px; }
+.btn { padding: 12px 24px; border-radius: 99px; font-size: 0.95rem; font-weight: 500; text-decoration: none; transition: all 0.3s var(--ease); cursor: pointer; border: 1px solid transparent; display: inline-flex; justify-content: center; align-items: center; }
+.btn.primary { background: var(--text-main); color: #fff; box-shadow: var(--shadow-md); }
+.btn.primary:hover { background: #000; transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.btn.secondary { background: var(--bg); color: var(--text-main); border-color: var(--border); box-shadow: var(--shadow-sm); }
+.btn.secondary:hover { background: var(--bg-subtle); transform: translateY(-2px); }
+
+.stats { display: flex; gap: 40px; }
+.stat-item b { display: block; font-size: 2rem; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; line-height: 1.2; }
+.stat-item span { color: var(--text-muted); font-size: 0.8rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; }
+
+#hx { width: 100%; height: min(60vh, 500px); mix-blend-mode: multiply; }
+
+/* Sections & Grid Layouts */
+.sec { padding: 96px 0; border-bottom: 1px solid var(--border); background: var(--bg-alt); }
+.sec:nth-child(even) { background: var(--bg); }
+.sec-header { max-width: 700px; margin-bottom: 48px; }
+.sec-header h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin: 0 0 16px; font-weight: 700; letter-spacing: -0.03em; }
+.k { font-family: var(--font-mono); font-size: 0.8rem; font-weight: 600; color: var(--accent); letter-spacing: 0.1em; display: block; margin-bottom: 12px; text-transform: uppercase; }
+.sub { color: var(--text-muted); font-size: 1.1rem; line-height: 1.7; margin: 0; }
+
+/* Bento Box Grid */
+.bento { display: grid; gap: 24px; grid-template-columns: repeat(12, 1fr); }
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.4s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-4px); border-color: #cbd5e1; }
+.card.col-4 { grid-column: span 4; }
+.card.col-6 { grid-column: span 6; }
+.card.col-8 { grid-column: span 8; }
+.card.col-12 { grid-column: span 12; }
+
+@media (max-width: 900px) {
+  .card.col-4, .card.col-6, .card.col-8 { grid-column: span 12; }
+  .hero .w { grid-template-columns: 1fr; text-align: center; }
+  .hero::before { display: none; }
+  .lead { margin: 0 auto 32px auto; }
+  .btns { justify-content: center; }
+  .stats { justify-content: center; }
+  #hx { height: 350px; }
+}
+
+.card h3 { margin: 0 0 12px; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.01em; color: var(--text-main); }
+.card p { margin: 0; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+
+/* Interactive UI Elements */
+.chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+.chip { padding: 8px 16px; border-radius: 99px; border: 1px solid var(--border); background: var(--bg); color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: all 0.2s var(--ease); }
+.chip:hover { background: var(--bg-subtle); color: var(--text-main); }
+.chip.on { background: var(--text-main); color: #fff; border-color: var(--text-main); }
+
+textarea, select { width: 100%; font-family: var(--font-mono); font-size: 0.9rem; background: var(--bg-alt); color: var(--text-main); border: 1px solid var(--border); border-radius: 12px; padding: 16px; outline: none; transition: border 0.3s var(--ease), box-shadow 0.3s var(--ease); resize: vertical; }
+textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-light); background: var(--bg); }
+
+/* Protein Display */
+.metric-row { display: flex; gap: 16px; flex-wrap: wrap; }
+.metric { flex: 1 1 120px; border: 1px solid var(--border); background: var(--bg-alt); border-radius: 12px; padding: 16px; text-align: center; }
+.metric b { display: block; font-size: 1.5rem; font-weight: 700; color: var(--text-main); line-height: 1.2; }
+.metric span { color: var(--text-muted); font-size: 0.75rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+
+.progress-bar { display: flex; height: 12px; border-radius: 99px; overflow: hidden; margin: 24px 0 12px; background: var(--border); }
+.progress-bar i { display: block; width: 0; transition: width 1s var(--ease); }
+
+.seq-box { font-family: var(--font-mono); font-size: 0.9rem; line-height: 1.6; overflow-x: auto; white-space: pre; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; padding: 16px; margin-bottom: 12px; }
+.seq-box span { display: inline-block; transition: transform 0.2s var(--ease); cursor: default; }
+.seq-box span:hover { transform: scale(1.15); font-weight: 600; }
+.H { color: var(--h-color); font-weight: 600; } .E { color: var(--e-color); font-weight: 600; } .C { color: var(--c-color); }
+.note { color: var(--text-light); font-size: 0.85rem; }
+
+/* Stepper UI */
+.stepper { display: flex; gap: 0; margin: 10px 0 24px; position: relative; }
+.stepper button { flex: 1; background: none; border: 0; color: var(--text-muted); font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 500; cursor: pointer; padding: 0 4px; text-align: center; transition: 0.3s var(--ease); }
+.stepper i { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; margin: 0 auto 12px; border: 2px solid var(--border); background: var(--bg); font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; position: relative; z-index: 1; transition: 0.4s var(--ease); color: var(--text-muted); }
+.stepper .on i, .stepper .dn i { background: var(--text-main); border-color: var(--text-main); color: #fff; }
+.stepper .on { color: var(--text-main); font-weight: 600; }
+.stepper-track { position: absolute; left: 10%; right: 10%; top: 18px; height: 2px; background: var(--border); z-index: 0; }
+.stepper-track u { display: block; height: 100%; width: 0; background: var(--text-main); transition: width 0.6s var(--ease); }
+
+/* Confusion Matrix */
+.matrix { display: grid; grid-template-columns: auto 1fr 1fr; gap: 8px; align-items: stretch; text-align: center; margin-top: 16px; }
+.matrix div { padding: 16px; border-radius: 12px; font-size: 0.8rem; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; justify-content: center; }
+.matrix .num { font-size: 1.75rem; font-weight: 700; color: var(--text-main); font-family: 'Inter', sans-serif; }
+.matrix .good { background: var(--safe-bg); border: 1px solid rgba(16, 185, 129, 0.2); color: var(--safe); }
+.matrix .bad { background: var(--danger-bg); border: 1px solid rgba(239, 68, 68, 0.2); color: var(--danger); }
+
+/* Bar Chart */
+.bar-row { display: grid; grid-template-columns: minmax(130px, auto) 1fr auto; gap: 16px; align-items: center; margin: 12px 0; font-size: 0.85rem; font-weight: 500; }
+.bar-row em { font-style: normal; color: var(--text-main); text-transform: capitalize; }
+.bar-row u { display: block; height: 8px; border-radius: 99px; width: 0; transition: width 1s var(--ease); }
+
+/* AI Gauge */
+.gauge-track { position: relative; height: 12px; border-radius: 99px; background: linear-gradient(90deg, var(--danger), var(--border) 50%, var(--safe)); margin: 32px 0 16px; border: 1px solid rgba(0,0,0,0.05); }
+.gauge-track i { position: absolute; top: -8px; width: 28px; height: 28px; border-radius: 50%; background: #fff; border: 3px solid var(--text-main); left: 50%; transform: translateX(-50%); transition: left 0.8s var(--ease); box-shadow: var(--shadow-md); }
+.result-text { font-size: 1.05rem; margin-top: 16px; font-weight: 500; line-height: 1.5;}
+.status-ok { color: var(--safe); font-weight: 600; background: var(--safe-bg); padding: 2px 8px; border-radius: 6px; font-size: 0.9rem;} 
+.status-bad { color: var(--danger); font-weight: 600; background: var(--danger-bg); padding: 2px 8px; border-radius: 6px; font-size: 0.9rem;}
+
+.formula { font-family: var(--font-mono); font-size: 0.95rem; padding: 20px; background: var(--bg-alt); border: 1px solid var(--border); border-radius: 12px; margin: 16px 0; color: var(--text-main); text-align: center; }
+
+/* Accordion */
+.accordion { border: 1px solid var(--border); border-radius: 16px; background: var(--bg); margin-bottom: 12px; overflow: hidden; transition: all 0.3s var(--ease); }
+.accordion:hover { border-color: #cbd5e1; }
+.accordion button { width: 100%; display: flex; justify-content: space-between; align-items: center; background: none; border: 0; color: var(--text-main); font-family: 'Inter', sans-serif; font-size: 1rem; font-weight: 600; padding: 20px 24px; cursor: pointer; text-align: left; }
+.accordion button svg { width: 20px; height: 20px; transition: transform 0.4s var(--ease); color: var(--text-muted); }
+.accordion.open button svg { transform: rotate(180deg); color: var(--text-main); }
+.accordion .content-wrap { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.4s var(--ease); }
+.accordion.open .content-wrap { grid-template-rows: 1fr; }
+.accordion .content { overflow: hidden; margin: 0; padding: 0 24px; color: var(--text-muted); font-size: 0.95rem; line-height: 1.6; }
+.accordion.open .content { padding-bottom: 24px; }
+
+footer { padding: 48px 0; text-align: center; color: var(--text-light); font-size: 0.85rem; border-top: 1px solid var(--border); background: var(--bg); font-weight: 500;}
+
+/* Seamless Reveal Animations */
+.fade-up { opacity: 0; transform: translateY(24px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.fade-up.visible { opacity: 1; transform: translateY(0); }
+.delay-1 { transition-delay: 0.1s; }
+.delay-2 { transition-delay: 0.2s; }
+.delay-3 { transition-delay: 0.3s; }
+
+@media(prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  .fade-up { opacity: 1; transform: none; }
+}
+</style>
+</head>
+<body>
+
+<nav id="navbar">
+  <div class="w">
+    <a href="#home" class="logo">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="url(#grad)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4f46e5" /><stop offset="100%" stop-color="#0ea5e9" /></linearGradient></defs><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+      CompBio<span>Lab</span>
+    </a>
+    <a href="#home" class="link on">Overview</a>
+    <a href="#proteins" class="link">Proteins</a>
+    <a href="#ai" class="link">Medical AI</a>
+    <a href="#ethics" class="link">Impact</a>
+  </div>
+</nav>
+
+<header class="hero" id="home">
+  <div class="w">
+    <div class="fade-up visible">
+      <div class="badge">Purpose-Driven Science</div>
+      <h1>Biology is now a <br><span>data science.</span></h1>
+      <p class="lead">We built this platform with a clear purpose: to bridge the gap between complex biological data and human understanding. Experience how code translates to physical proteins, and how AI is trained to save lives.</p>
+      <div class="btns">
+        <a class="btn primary" href="#proteins">Explore the Lab</a>
+        <a class="btn secondary" href="#ai">View AI Diagnostics</a>
+      </div>
+      <div class="stats">
+        <div class="stat-item"><b data-n="569">0</b><span>Patient Scans</span></div>
+        <div class="stat-item"><b data-n="30">0</b><span>Data Points / Cell</span></div>
+        <div class="stat-item"><b data-n="98.2" data-d="1" data-s="%">0</b><span>AI Accuracy</span></div>
+      </div>
+    </div>
+    <div class="fade-up visible delay-1">
+      <canvas id="hx" aria-label="Animated double helix representing data"></canvas>
+    </div>
+  </div>
+</header>
+
+<section class="sec" id="proteins">
+  <div class="w">
+    <div class="sec-header fade-up">
+      <span class="k">Module 1 / Proteomics</span>
+      <h2>Protein Structure Predictor</h2>
+      <p class="sub">DNA provides the instruction manual, but proteins are the machines that do the actual work in our bodies. Their function is entirely determined by their 3D shape. We've built an interactive tool to predict how raw biological text folds into physical shapes.</p>
+    </div>
+    
+    <div class="bento">
+      <div class="card col-12 fade-up">
+        <div class="chips" id="lv"></div>
+        <div id="lvt" style="min-height: 48px;"></div>
+      </div>
+      
+      <div class="card col-4 fade-up delay-1">
+        <h3>1. The Rules</h3>
+        <p>Each amino acid letter naturally wants to coil into a spiral (Helix) or lay flat (Sheet). We look up these microscopic preferences.</p>
+      </div>
+      <div class="card col-4 fade-up delay-2">
+        <h3>2. The Context</h3>
+        <p>Letters don't act alone. We write algorithms to analyze groups of 5 or 6 letters, because neighbors force each other into structure.</p>
+      </div>
+      <div class="card col-4 fade-up delay-3">
+        <h3>3. The Output</h3>
+        <p>If the math crosses a threshold, the code snaps into a Helix (H) or a Sheet (E). If it's mathematically unstable, it stays a Coil (C).</p>
+      </div>
+      
+      <div class="card col-12 fade-up">
+        <h3>Live Prediction Engine</h3>
+        <p class="note" style="margin-bottom: 16px;">Select a sequence below to see the translation from text to structure.</p>
+        <div class="chips" id="ex"></div>
+        <textarea id="seq" rows="2" spellcheck="false"></textarea>
+        
+        <div class="metric-row" id="pm" style="margin-top: 24px;"></div>
+        
+        <div class="progress-bar">
+          <i id="b1" style="background:var(--h-color)"></i>
+          <i id="b2" style="background:var(--e-color)"></i>
+          <i id="b3" style="background:var(--c-color)"></i>
+        </div>
+        
+        <div class="seq-box" id="out"></div>
+        <p class="note"><span class="H">H = Helix (Spiral)</span> &nbsp;&middot;&nbsp; <span class="E">E = Sheet (Flat)</span> &nbsp;&middot;&nbsp; <span class="C">C = Coil (Messy)</span></p>
+        
+        <div id="chart" style="margin-top: 24px;"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ai">
+  <div class="w">
+    <div class="sec-header fade-up">
+      <span class="k">Module 2 / Machine Learning</span>
+      <h2>Teaching AI to Detect Cancer</h2>
+      <p class="sub">To show you how medical AI works, we trained a Logistic Regression model on 569 real breast cancer biopsies. The purpose is not to replace a doctor, but to give them an impossibly fast, mathematically precise second opinion.</p>
+    </div>
+    
+    <div class="bento">
+      <div class="card col-12 fade-up">
+        <div class="stepper" id="st"><div class="stepper-track"><u id="tk"></u></div></div>
+        <div id="stt" style="min-height: 72px;"></div>
+      </div>
+      
+      <div class="card col-12 fade-up">
+        <h3>The Evaluation (Unseen Patients)</h3>
+        <div class="metric-row" id="dm" style="margin-top: 16px;"></div>
+      </div>
+      
+      <div class="card col-6 fade-up delay-1">
+        <h3>The Confusion Matrix</h3>
+        <p class="note">In medicine, false alarms cause anxiety, but missing a real danger is fatal. Our AI caught 71 of 72 malignant cases.</p>
+        <div class="matrix" id="cm"></div>
+      </div>
+      
+      <div class="card col-6 fade-up delay-2">
+        <h3>Feature Importance</h3>
+        <p class="note">A "black box" is dangerous in a hospital. This chart explains exactly which physical cell traits the AI used to make its decision.</p>
+        <div id="fi" style="margin-top: 16px;"></div>
+      </div>
+      
+      <div class="card col-12 fade-up">
+        <h3>Run a Live Diagnostic</h3>
+        <p class="note" style="margin-bottom: 16px;">Select a patient record from our held-back testing vault. The AI has never seen this data before.</p>
+        <select id="sm"></select>
+        <div id="top" class="note" style="margin-top:16px; font-family:var(--font-mono);"></div>
+        
+        <div class="gauge-track"><i id="mk"></i></div>
+        <div style="display:flex; justify-content:space-between; font-size:0.85rem; font-weight:600; color:var(--text-muted); text-transform:uppercase;">
+          <span style="color:var(--danger)">Malignant</span>
+          <span style="color:var(--safe)">Benign</span>
+        </div>
+        
+        <div class="result-text" id="rs"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="ethics">
+  <div class="w">
+    <div class="sec-header fade-up">
+      <span class="k">Module 3 / Impact</span>
+      <h2>Ethics and the Human Element</h2>
+      <p class="sub">Technology of this scale—whether it's Google's AlphaFold designing new medicines or AI screening for cancer—requires profound responsibility. Here are the guardrails required for the future.</p>
+    </div>
+    
+    <div class="bento">
+      <div class="card col-12 fade-up" id="ac" style="padding: 16px; background: transparent; border: none; box-shadow: none;">
+        <!-- Accordions injected here -->
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="w">
+    <p>&copy; Computational Biology Lab. Designed with purpose for clarity and education.</p>
+  </div>
+</footer>
+
+<script>
+// Ultra-smooth Reveal Logic
+const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+const observer = new IntersectionObserver((entries, obs) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      if(entry.target.querySelectorAll("[data-n]").length > 0) {
+        entry.target.querySelectorAll("[data-n]").forEach(count);
+      }
+      obs.unobserve(entry.target);
+    }
+  });
+}, observerOptions);
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// Number Counters
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+function count(el) {
+  if (RM) { el.textContent = el.dataset.n + (el.dataset.s || ""); return; }
+  const to = +el.dataset.n, dp = +(el.dataset.d || 0), sf = el.dataset.s || "", t0 = performance.now();
+  const duration = 2000;
+  function f(n) {
+    let p = Math.min((n - t0) / duration, 1);
+    let easeOutQuart = 1 - Math.pow(1 - p, 4);
+    el.textContent = (to * easeOutQuart).toFixed(dp) + sf;
+    if (p < 1) requestAnimationFrame(f);
+  }
+  requestAnimationFrame(f);
+}
+
+// Nav background transition on scroll
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('navbar');
+  if (window.scrollY > 20) {
+    nav.style.background = 'rgba(255, 255, 255, 0.95)';
+    nav.style.boxShadow = '0 1px 2px 0 rgba(0,0,0,0.05)';
+  } else {
+    nav.style.background = 'rgba(255, 255, 255, 0.85)';
+    nav.style.boxShadow = 'none';
+  }
+  
+  // Highlight active link
+  const sections = document.querySelectorAll('section, header');
+  const links = document.querySelectorAll('nav a.link');
+  let current = '';
+  sections.forEach(sec => {
+    const secTop = sec.offsetTop;
+    if (pageYOffset >= secTop - 150) { current = sec.getAttribute('id'); }
+  });
+  links.forEach(link => {
+    link.classList.remove('on');
+    if (link.getAttribute('href').includes(current)) link.classList.add('on');
+  });
+});
+
+// Refined DNA Canvas Animation
+const $ = id => document.getElementById(id);
+(function(){
+  const c = $("hx"), x = c.getContext("2d");
+  let t = 0;
+  function size() {
+    const r = c.parentElement.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    c.width = r.width * d; c.height = r.height * d; x.setTransform(d, 0, 0, d, 0, 0);
+  }
+  size(); window.addEventListener("resize", size);
+  function draw() {
+    const w = c.clientWidth, h = c.clientHeight;
+    const colorA = "#4f46e5", colorB = "#0ea5e9", lineCol = "rgba(100, 116, 139, 0.2)";
+    const N = 40, amp = Math.min(w * 0.25, 120);
+    x.clearRect(0, 0, w, h);
+    for (let i = 0; i < N; i++) {
+      const y = (i + 0.5) * h / N, p = i * 0.4 + t, s = Math.sin(p), z = Math.cos(p);
+      const x1 = w / 2 + amp * s, x2 = w / 2 - amp * s;
+      x.globalAlpha = 1; x.strokeStyle = lineCol; x.lineWidth = 1.5;
+      x.beginPath(); x.moveTo(x1, y); x.lineTo(x2, y); x.stroke();
+      x.globalAlpha = 0.6 + 0.4 * (z + 1) / 2; x.fillStyle = colorA;
+      x.beginPath(); x.arc(x1, y, 4 + 3 * z, 0, 2 * Math.PI); x.fill();
+      x.globalAlpha = 0.6 + 0.4 * (1 - z) / 2; x.fillStyle = colorB;
+      x.beginPath(); x.arc(x2, y, 4 - 3 * z, 0, 2 * Math.PI); x.fill();
+    }
+    t += 0.02;
+    if (!RM) requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// Data Objects
+const D={"names":["mean_radius","mean_texture","mean_perimeter","mean_area","mean_smoothness","mean_compactness","mean_concavity","mean_concave_points","mean_symmetry","mean_fractal_dimension","radius_error","texture_error","perimeter_error","area_error","smoothness_error","compactness_error","concavity_error","concave_points_error","symmetry_error","fractal_dimension_error","worst_radius","worst_texture","worst_perimeter","worst_area","worst_smoothness","worst_compactness","worst_concavity","worst_concave_points","worst_symmetry","worst_fractal_dimension"],"mean":[14.0672,19.2474,91.5574,648.5411,0.0962,0.1039,0.0892,0.0483,0.1806,0.0628,0.399,1.2187,2.8226,39.2437,0.0071,0.0255,0.0326,0.0117,0.0208,0.0038,16.1772,25.6473,106.6253,869.0266,0.1323,0.2543,0.2766,0.1139,0.2909,0.0839],"std":[3.4955,4.4004,24.1227,344.5653,0.0134,0.0535,0.0817,0.0389,0.028,0.0072,0.2675,0.5709,1.9713,41.7173,0.0031,0.0184,0.0323,0.0063,0.0088,0.0028,4.7648,6.2186,33.1586,552.319,0.0225,0.1597,0.2157,0.0667,0.0646,0.0184],"coef":[-0.5115,-0.5527,-0.4763,-0.5411,-0.2125,0.6483,-0.6021,-0.7042,-0.1672,0.1997,-1.083,0.2488,-0.5443,-0.9291,-0.1603,0.6472,0.1606,-0.4438,0.3605,0.4379,-0.9476,-1.2551,-0.7632,-0.9478,-0.7466,0.0555,-0.8232,-0.9537,-0.9392,-0.1873],"b":0.3022,"acc":98.2,"ntr":455,"nte":114,"rec_m":97.6,"prec_m":97.6,"cm":[[41,1],[1,71]],"samples":[[11.13,16.62,70.47,381.1,0.08151,0.03834,0.01369,0.0137,0.1511,0.06148,0.1415,0.9671,0.968,9.704,0.005883,0.006263,0.009398,0.006189,0.02009,0.002377,11.68,20.29,74.35,421.1,0.103,0.06219,0.0458,0.04044,0.2383,0.07083],[16.5,18.29,106.6,838.1,0.09686,0.08468,0.05862,0.04835,0.1495,0.05593,0.3389,1.439,2.344,33.58,0.007257,0.01805,0.01832,0.01033,0.01694,0.002001,18.13,25.45,117.2,1009.0,0.1338,0.1679,0.1663,0.09123,0.2394,0.06469],[13.17,18.22,84.28,537.3,0.07466,0.05994,0.04859,0.0287,0.1454,0.05549,0.2023,0.685,1.236,16.89,0.005969,0.01493,0.01564,0.008463,0.01093,0.001672,14.9,23.89,95.1,687.6,0.1282,0.1965,0.1876,0.1045,0.2235,0.06925],[8.878,15.49,56.74,241.0,0.08293,0.07698,0.04721,0.02381,0.193,0.06621,0.5381,1.2,4.277,30.18,0.01093,0.02899,0.03214,0.01506,0.02837,0.004174,9.981,17.7,65.27,302.0,0.1015,0.1248,0.09441,0.04762,0.2434,0.07431],[12.95,16.02,83.14,513.7,0.1005,0.07943,0.06155,0.0337,0.173,0.0647,0.2094,0.7636,1.231,17.67,0.008725,0.02003,0.02335,0.01132,0.02625,0.004726,13.74,19.93,88.81,585.4,0.1483,0.2068,0.2241,0.1056,0.338,0.09584],[19.55,28.77,133.6,1207.0,0.0926,0.2063,0.1784,0.1144,0.1893,0.06232,0.8426,1.199,7.158,106.4,0.006356,0.04765,0.03863,0.01519,0.01936,0.005252,25.05,36.27,178.6,1926.0,0.1281,0.5329,0.4251,0.1941,0.2818,0.1005],[13.82,24.49,92.33,595.9,0.1162,0.1681,0.1357,0.06759,0.2275,0.07237,0.4751,1.528,2.974,39.05,0.00968,0.03856,0.03476,0.01616,0.02434,0.006995,16.01,32.94,106.0,788.0,0.1794,0.3966,0.3381,0.1521,0.3651,0.1183],[21.56,22.39,142.0,1479.0,0.111,0.1159,0.2439,0.1389,0.1726,0.05623,1.176,1.256,7.673,158.7,0.0103,0.02891,0.05198,0.02454,0.01114,0.004239,25.45,26.4,166.1,2027.0,0.141,0.2113,0.4107,0.2216,0.206,0.07115],[19.68,21.68,129.9,1194.0,0.09797,0.1339,0.1863,0.1103,0.2082,0.05715,0.6226,2.284,5.173,67.66,0.004756,0.03368,0.04345,0.01806,0.03756,0.003288,22.75,34.66,157.6,1540.0,0.1218,0.3458,0.4734,0.2255,0.4045,0.07918],[18.31,20.58,120.8,1052.0,0.1068,0.1248,0.1569,0.09451,0.186,0.05941,0.5449,0.9225,3.218,67.36,0.006176,0.01877,0.02913,0.01046,0.01559,0.002725,21.86,26.2,142.2,1493.0,0.1492,0.2536,0.3759,0.151,0.3074,0.07863]],"labels":[1,1,1,1,1,0,0,0,0,0]};
+const PA={E:1.51,M:1.45,A:1.42,L:1.21,K:1.16,F:1.13,Q:1.11,W:1.08,I:1.08,V:1.06,D:1.01,H:1.00,R:.98,T:.83,S:.77,C:.70,Y:.69,N:.67,P:.57,G:.57};
+const PB={V:1.70,I:1.60,Y:1.47,F:1.38,W:1.37,L:1.30,C:1.19,T:1.19,Q:1.10,M:1.05,R:.93,N:.89,H:.87,A:.83,S:.75,G:.75,K:.74,P:.55,D:.54,E:.37};
+
+// Protein Structure Predictor
+const LV=[["Primary","The linear chain of amino acids. Simply the sequence data."],["Secondary","Local geometry. How the string physically folds (helices or sheets)."],["Tertiary","Full 3D architecture. The complete folded volume of the machine."],["Quaternary","Multiple machines docking together to perform complex functions."]];
+function updateLv(i){
+  document.querySelectorAll("#lv .chip").forEach((c,j) => c.classList.toggle("on", i===j));
+  $("lvt").innerHTML = `<div style="animation: fadeIn 0.4s ease;"><p style="margin:0; font-weight:500; color:var(--text-main);">${LV[i][0]} Structure</p><p style="margin-top:4px;">${LV[i][1]}</p></div>`;
+}
+$("lv").innerHTML = LV.map((l,i) => `<button class="chip" data-i="${i}">${l[0]}</button>`).join("");
+$("lv").addEventListener('click', e => { if(e.target.dataset.i) updateLv(+e.target.dataset.i); });
+updateLv(0);
+
+const EX=[["Ubiquitin (Real)","MQIFVKTLTGKTITLEVEPSDTIENVKAKIQDKEGIPPDQQRLIFAGKQLEDGRTLSDYNIQKESTLHLVLRLRGG"],["Insulin (Real)","GIVEQCCTSICSLYQLENYCNFVNQHLCGSHLVEALYLVCGERGFFYTPKT"],["Lab Helix","EAAAKEAAAKEAAAKEAAAKEAAAK"],["Lab Sheet","VIVIVIYVYVYVIVIVYVYV"]];
+$("ex").innerHTML = EX.map((e,i) => `<button class="chip" data-i="${i}">${e[0]}</button>`).join("");
+$("ex").addEventListener('click', e => { if(e.target.dataset.i) { $("seq").value = EX[+e.target.dataset.i][1]; runPredictor(); }});
+$("seq").value = EX[0][1];
+
+function roll(a, w) {
+  const l = Math.floor(w/2), r = w - l - 1;
+  return a.map((_, i) => {
+    let s = 0, c = 0;
+    for(let j = i - l; j <= i + r; j++) {
+      if(j >= 0 && j < a.length) { s += a[j]; c++; }
+    }
+    return s / c;
+  });
+}
+function trim(s, k, m) {
+  let i = 0;
+  while(i < s.length) {
+    if(s[i] === k) {
+      let j = i; while(j < s.length && s[j] === k) j++;
+      if(j - i < m) { for(let q = i; q < j; q++) s[q] = "C"; }
+      i = j;
+    } else { i++; }
+  }
+}
+
+function runPredictor() {
+  const raw = $("seq").value.toUpperCase();
+  const seq = raw.split("").filter(c => c in PA);
+  const n = seq.length;
+  if(n < 10) { 
+    $("pm").innerHTML = "<p class='note'>Please enter at least 10 valid amino-acid characters.</p>"; 
+    $("out").innerHTML = ""; $("chart").innerHTML = ""; 
+    return; 
+  }
+  
+  const ha = roll(seq.map(a => PA[a]), 6);
+  const sa = roll(seq.map(a => PB[a]), 5);
+  const st = ha.map((h, i) => (h >= 1.03 && h >= sa[i]) ? "H" : ((sa[i] >= 1.05 && sa[i] > h) ? "E" : "C"));
+  trim(st, "H", 4); trim(st, "E", 3);
+  
+  const pc = k => st.filter(v => v === k).length / n * 100;
+  $("pm").innerHTML = [["Length", n+" aa"],["Helix", Math.round(pc("H"))+"%"],["Sheet", Math.round(pc("E"))+"%"],["Coil", Math.round(pc("C"))+"%"]].map(v => `<div class="metric"><b>${v[1]}</b><span>${v[0]}</span></div>`).join("");
+  $("b1").style.width = pc("H")+"%"; $("b2").style.width = pc("E")+"%"; $("b3").style.width = pc("C")+"%";
+  
+  let o = "";
+  for(let s = 0; s < n; s += 50) {
+    const e = Math.min(s + 50, n);
+    o += String(s+1).padStart(4) + "  " + seq.slice(s,e).map(a => `<span title="${a}">${a}</span>`).join("") + "\n      " + st.slice(s,e).map(v => `<span class="${v}">${v}</span>`).join("") + "\n\n";
+  }
+  $("out").innerHTML = o;
+  
+  const W = 800, H = 140;
+  const X = i => 40 + i * (W - 50) / (n - 1);
+  const Y = v => H - 20 - (v - 0.6) * (H - 40);
+  const pl = (a, c) => `<polyline fill="none" stroke="var(--${c})" stroke-width="2" stroke-linejoin="round" points="${a.map((v,i) => X(i).toFixed(1)+","+Y(v).toFixed(1)).join(" ")}"/>`;
+  
+  $("chart").innerHTML = `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto; display:block;">
+    <line x1="40" x2="${W-10}" y1="${Y(1)}" y2="${Y(1)}" stroke="var(--border)" stroke-dasharray="4"/>
+    <text x="5" y="${Y(1)+4}" font-size="11" fill="var(--text-light)" font-family="var(--font-mono)">1.0</text>
+    ${pl(ha, "h-color")} ${pl(sa, "e-color")}
+    <text x="40" y="${H-4}" font-size="10" fill="var(--text-light)" font-family="var(--font-sans)">Yellow = Helix Propensity | Blue = Sheet Propensity</text>
+  </svg>`;
+}
+let tm; $("seq").addEventListener("input", () => { clearTimeout(tm); tm = setTimeout(runPredictor, 200); });
+runPredictor();
+
+
+// Medical AI Flow
+const ST = [
+  ["Dataset Compilation", `Compiled ${D.ntr+D.nte} high-resolution biopsy records. Each record represents 30 quantitative geometric features of a cell nucleus.`],
+  ["Stratified Split", `Isolated ${D.nte} records into a mathematically sealed test vault. The remaining ${D.ntr} were utilized for model training.`],
+  ["Feature Scaling", `Standardized the data (Z-score normalization) to ensure massive features (like area) do not statistically drown out minute features (like smoothness).`],
+  ["Logistic Training", `The algorithm iterates to find optimal 'weights' for each feature, defining the mathematical boundary between benign and malignant profiles.`],
+  ["Clinical Evaluation", `Unlocked the vault. The model evaluated the ${D.nte} unseen patients, achieving ${D.acc}% global accuracy.`]
+];
+$("st").insertAdjacentHTML("beforeend", ST.map((s,i) => `<button data-i="${i}"><i>${i+1}</i>${s[0]}</button>`).join(""));
+
+function updateStep(i) {
+  document.querySelectorAll("#st button").forEach((b, j) => {
+    b.classList.toggle("on", i === j);
+    b.classList.toggle("dn", j < i);
+  });
+  $("tk").style.width = (i / (ST.length - 1) * 100) + "%";
+  $("stt").innerHTML = `<div style="animation: fadeIn 0.4s ease;"><h3 style="margin:0 0 8px; font-size:1.05rem; color:var(--text-main);">${i+1}. ${ST[i][0]}</h3><p style="margin:0; color:var(--text-muted);">${ST[i][1]}</p></div>`;
+}
+let autoStep; 
+$("st").addEventListener('click', e => {
+  const b = e.target.closest("button");
+  if(b) { clearInterval(autoStep); updateStep(+b.dataset.i); }
+});
+updateStep(0);
+
+// Auto-play steps when visible
+const aiObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting && !RM) {
+    let k = 0;
+    autoStep = setInterval(() => { k++; if (k >= ST.length) { clearInterval(autoStep); return; } updateStep(k); }, 3000);
+    aiObserver.disconnect();
+  }
+});
+aiObserver.observe($("st"));
+
+$("dm").innerHTML = [
+  ["Accuracy", D.acc+"%"],
+  ["Recall (Danger)", D.rec_m+"%"],
+  ["Precision", D.prec_m+"%"],
+  ["N (Test Vault)", D.nte]
+].map(v => `<div class="metric"><b style="font-size:1.75rem;">${v[1]}</b><span style="font-size:0.7rem;">${v[0]}</span></div>`).join("");
+
+$("cm").innerHTML = `
+  <div></div><div>Predicted Danger</div><div>Predicted Safe</div>
+  <div>Actual Danger</div><div class="num good">${D.cm[0][0]}</div><div class="num bad">${D.cm[0][1]}</div>
+  <div>Actual Safe</div><div class="num bad">${D.cm[1][0]}</div><div class="num good">${D.cm[1][1]}</div>
+`;
+
+const fi = D.coef.map((c,i) => [D.names[i].replace(/_/g," "), c]).sort((a,b) => Math.abs(b[1]) - Math.abs(a[1])).slice(0, 7);
+const mx = Math.abs(fi[0][1]);
+$("fi").innerHTML = fi.map(f => `<div class="bar-row"><em>${f[0]}</em><u data-w="${Math.abs(f[1])/mx*100}" style="background:var(--${f[1]>0?"safe":"danger"})"></u><span class="note">${f[1]>0?"Safe Weight":"Danger Weight"}</span></div>`).join("");
+
+// Animate bars when visible
+const fiObserver = new IntersectionObserver(e => {
+  if(e[0].isIntersecting) { 
+    setTimeout(() => { document.querySelectorAll("#fi u").forEach(u => u.style.width = u.dataset.w + "%"); }, 200); 
+    fiObserver.disconnect(); 
+  }
+}); 
+fiObserver.observe($("fi"));
+
+$("sm").innerHTML = D.samples.map((_, i) => `<option value="${i}">Load Record #${String(i+1).padStart(3, '0')}</option>`).join("");
+function runDiagnostic() {
+  const i = +$("sm").value, s = D.samples[i]; 
+  let z = D.b;
+  s.forEach((v, k) => z += D.coef[k] * (v - D.mean[k]) / D.std[k]);
+  const p = 1 / (1 + Math.exp(-z)), g = p > 0.5 ? 1 : 0, a = D.labels[i];
+  const N = ["Malignant", "Benign"];
+  
+  $("top").textContent = [0, 3, 23].map(k => D.names[k].replace(/_/g," ") + ": " + s[k]).join("  |  ");
+  $("mk").style.left = (p * 100) + "%";
+  
+  const isCorrect = g === a;
+  $("rs").innerHTML = `<div style="animation: fadeIn 0.4s ease;">
+    Diagnostic Output: <b style="color:var(--text-main);">${N[g]}</b> 
+    <span style="color:var(--text-light); font-size:0.9rem;">(${(Math.max(p, 1-p)*100).toFixed(1)}% confidence)</span><br>
+    Ground Truth: <b>${N[a]}</b> &nbsp;&mdash;&nbsp; 
+    <span class="${isCorrect ? 'status-ok' : 'status-bad'}">${isCorrect ? 'Accurate ✓' : 'Inaccurate ✗'}</span>
+  </div>`;
+}
+$("sm").addEventListener('change', runDiagnostic);
+runDiagnostic();
+
+// Ethics Accordion
+const ET = [
+  ["Data Privacy & Cryptography", "Medical data is the most sensitive information on earth. Training modern algorithms requires robust anonymization protocols and absolute cryptographic security to protect patient identity."],
+  ["The Bias Trap", "Algorithms learn exactly what we teach them. An AI trained exclusively on data from one demographic will mathematically fail when diagnosing patients from diverse populations. Inclusive data is a strict requirement."],
+  ["Human in the Loop", "AI is a brilliant statistical assistant, but it lacks human judgment and empathy. If an algorithm flags an anomaly, a human doctor must remain the final authority to interpret the context and deliver the care."],
+  ["The Explainability Problem", "Clinicians cannot trust a 'black box.' In medical contexts, we must use explainable AI architectures (XAI) so doctors know precisely which biological markers triggered the machine's conclusion."]
+];
+
+$("ac").innerHTML = ET.map(e => `
+  <div class="accordion">
+    <button>
+      ${e[0]}
+      <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+    </button>
+    <div class="content-wrap"><div class="content"><p>${e[1]}</p></div></div>
+  </div>
+`).join("");
+
+$("ac").addEventListener('click', e => {
+  const btn = e.target.closest("button");
+  if(btn) btn.parentElement.classList.toggle("open");
+});
+
+// Keyframe for simple fades
+const style = document.createElement('style');
+style.innerHTML = `@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }`;
+document.head.appendChild(style);
+
+</script>
+</body>
+</html>
